@@ -1,3 +1,9 @@
+<!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/leaflegend)](https://CRAN.R-project.org/package=leaflegend)
+[![R-CMD-check](https://github.com/tomroh/leaflegend/workflows/R-CMD-check/badge.svg)](https://github.com/tomroh/leaflegend/actions)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental-1)
+<!-- badges: end -->
+
 
 # leaflegend
 
@@ -14,6 +20,12 @@ You can install the released version of leaflegend from [CRAN](https://CRAN.R-pr
 
 ``` r
 install.packages("leaflegend")
+```
+
+Install the development version with:
+
+```r
+devtools::install_github("tomroh/leaflegend")
 ```
 
 ## Example
