@@ -1,3 +1,13 @@
+# leaflegend 0.3.0
+
+* stroke outlines of shapes are now padded so that the stroke is not cut off
+
+* numeric legends now have appropriate sizing for text
+
+* star symbol outline has been fixed
+
+* new function `makeSizeIcons` as a convenience wrapper size scaled symbols
+
 # leaflegend 0.2.0
 
 * new functions `addLegendSize`, `sizeNumeric`, and `sizeBreaks` were added to allow encoding size on symbols.

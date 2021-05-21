@@ -165,6 +165,10 @@ addLegendImage <- function(map,
 #'
 #' opacity of fillColor
 #'
+#' @param strokeWidth
+#'
+#' width in pixels of symbol outline
+#'
 #' @param ...
 #'
 #' arguments to be passed to svg shape tag
@@ -175,9 +179,9 @@ addLegendImage <- function(map,
 #'
 #' @export
 #'
-makeSymbol <- function(shape, width, height, color, fillColor = color,
+makeSymbol <- function(shape, width, height = width, color, fillColor = color,
                        opacity = 1, fillOpacity = opacity, ...) {
-  strokewidth <- 0
+  strokewidth <- 1
   if ( 'stroke-width' %in% names(list(...)) ) {
     strokewidth <- list(...)[['stroke-width']]
   }
@@ -248,11 +252,9 @@ makeSymbol <- function(shape, width, height, color, fillColor = color,
       'fill-opacity' = fillOpacity,
       ...
     ),
-    'star' = htmltools::tags$path(
+    'star' = htmltools::tags$polygon(
       id = 'star',
-      d = sprintf('M %s z M %s z',
-                  draw_plus(width = width, height = height, offset = strokewidth),
-                  draw_cross(width = width, height = height, offset = strokewidth)),
+      points = draw_star(width = width, height = height, offset = strokewidth),
       stroke = color,
       fill = fillColor,
       'stroke-opacity' = opacity,
@@ -313,6 +315,50 @@ draw_cross <- function(width, height, offset = 0) {
   x <- width *  c(a, 0, .5 - a, 0, a, .5, 1 - a, 1, .5 + a, 1, 1 - a, .5, a) + offset
   y <- height * c(0, a, .5, 1 - a, 1, .5 + a, 1, 1 - a, .5, a, 0, .5 - a, 0) + offset
   paste(x, y, sep = ',', collapse = ' ')
+}
+draw_star <- function(width, height, offset = 0) {
+  x <- width * c(0.4,0.4,0.1414214,0,0.2585786,0,0,0.2585786,0,0.1414214,0.4,0.4,0.6,0.6,0.8585786,1,0.7414214,1,1,0.7414214,1,0.8585786,0.6,0.6,0.4) + offset
+  y <- height * c(0,0.2585786,0,0.1414214,0.4,0.4,0.6,0.6,0.8585786,1,0.7414214,1,1,0.7414214,1,0.8585786,0.6,0.6,0.4,0.4,0.1414214,0,0.2585786,0,0) + offset
+  paste(x, y, sep = ',', collapse = ' ')
+}
+
+#' @export
+#'
+#' @rdname makeSymbol
+makeSymbolIcons <- function(shape = c('rect',
+                                      'circle',
+                                      'triangle',
+                                      'plus',
+                                      'cross',
+                                      'diamond',
+                                      'star',
+                                      'stadium'),
+                            color,
+                            fillColor = color,
+                            opacity,
+                            fillOpacity = opacity,
+                            strokeWidth = 1,
+                            width,
+                            height = width,
+                            ...) {
+  shape <- match.arg(shape)
+  symbols <- Map(
+    makeSymbol,
+    shape = shape,
+    width = width,
+    height = height,
+    color = color,
+    fillColor = fillColor,
+    opacity = opacity,
+    fillOpacity = fillOpacity,
+    `stroke-width` = strokeWidth,
+    ...
+  )
+  leaflet::icons(
+    iconUrl = symbols,
+    iconAnchorX = width / 2,
+    iconAnchorY = height / 2
+  )
 }
 
 #' Add Customizable Color Legends to a 'leaflet' map widget
@@ -521,13 +567,13 @@ addLegendNumeric <- function(map,
                              pal,
                              values,
                              title = NULL,
-                             #labelStyle = 'font-size: 24px; vertical-align: middle;',
+                             #labelStyle = 'font-size: 24px;',
                              shape = c('rect', 'stadium'),
                              orientation = c('vertical', 'horizontal'),
                              width = 20,
                              height = 100,
                              bins = 7,
-                             numberFormat = function(x) {prettyNum(x, format = 'f', big.mark = ',', scientific = FALSE)},
+                             numberFormat = function(x) {prettyNum(x, format = 'f', big.mark = ',', digits = 3, scientific = FALSE)},
                              tickLength = 4,
                              tickWidth = 1,
                              decreasing = FALSE,
@@ -535,7 +581,6 @@ addLegendNumeric <- function(map,
                              ...) {
   stopifnot( attr(pal, 'colorType') == 'numeric' )
   rng <- range(values, na.rm = TRUE)
-  bins <- bins
   breaks <- pretty(values, bins)
   if ( breaks[1] < rng[1] ) {
     breaks[1] <- rng[1]
@@ -568,10 +613,14 @@ addLegendNumeric <- function(map,
     x2 <- 1
   }
   labels <- numberFormat(labels)
-  textSpace <- max(graphics::strwidth(labels, units = 'inches', cex = 1.5)) * 72
+  #fontSize <- as.numeric(sub('.*(font-size: )([0-9]+)(px).*', '\\2', labelStyle))
+  labelStyle <- ''
+  cexAdj <- 1#fontSize / 14
+  textWidth <- max(graphics::strwidth(labels, units = 'inches', cex = cexAdj)) * 72
+  textHeight <- max(graphics::strheight(labels, units = 'inches', cex = cexAdj)) * 72
   padLabel <- 5
   if ( vertical ) {
-    svgwidth <- width + tickLength + padLabel + textSpace
+    svgwidth <- width + tickLength
     svgheight <- height
     rectx <- 0
     linex1 <- width
@@ -580,33 +629,26 @@ addLegendNumeric <- function(map,
     liney2 <- scaledbreaks[-outer] * height
     textx <- 0
     texty <- scaledbreaks[-outer] * height
-    textdx <- width + tickLength + padLabel
-    textdy <- '.5ex'
-    textanchor <- 'start'
   } else {
-    svgwidth <- width + textSpace
-    svgheight <- height + tickLength + padLabel * 3
-    rectx <- textSpace / 2
-    linex1 <- scaledbreaks[outer] * width + rectx + .5 * c(1, -1)
-    linex2 <- scaledbreaks[outer] * width + rectx + .5 * c(1, -1)
+    svgwidth <- width
+    svgheight <- height + tickLength
+    rectx <- 0
+    linex1 <- scaledbreaks[outer] * width
+    linex2 <- scaledbreaks[outer] * width
     liney1 <- height
     liney2 <- height + tickLength
-    textx <- scaledbreaks[outer] * width + rectx
-    texty <- 0
-    textdx <- '.5ex'
-    textdy <- height + tickLength + padLabel * 3
-    textanchor <- 'middle'
   }
   if ( shape == 'rect' ) {
     rectround <- list(rx = '0%')
   } else if ( shape == 'stadium' & vertical ) {
-    rectround <- list(rx = '5%')
+    rectround <- list(rx = '10%')
   } else {
     rectround <- list(ry = '10%')
   }
   id <- paste0(sample(c(0:9, letters, LETTERS), 10, replace = TRUE), collapse = '')
-  htmlElements <- list(htmltools::tags$svg(width = svgwidth,
-                                           height = svgheight,
+  svgElement <- htmltools::tags$svg(
+    width = svgwidth,
+    height = svgheight,
                            htmltools::tags$def(
                              htmltools::tags$linearGradient(
                                id = id,
@@ -632,18 +674,36 @@ addLegendNumeric <- function(map,
                                y2 = liney2,
                                'stroke-width' = tickWidth,
                                stroke = 'black'
-                           ),
-                           Map(htmltools::tags$text,
-                               #style = labelStyle,
-                               labels,
-                               dx = textdx,
-                               dy = textdy,
-                               x = textx,
-                               y = texty,
-                               'text-anchor' = textanchor
                            )
   )
-  )
+  if ( vertical ) {
+    htmlElements <- list(htmltools::tags$div(style = 'display: flex;',
+      htmltools::tags$div(svgElement, style="margin-right: 5px"),
+      htmltools::tags$div(style=sprintf("width: %spx; height: %spx; position: relative; %s", textWidth, height, labelStyle),
+                          class="container",
+                          Map(function(y, label, leftPos) {
+                            htmltools::tags$div(style=sprintf("position:absolute; left:%spx; top: %spx;",
+                                                              leftPos,
+                                                              y),
+                                                label)
+                          },
+                          texty - textHeight , labels, textWidth - graphics::strwidth(labels, units = 'inches', cex = cexAdj) * 72)
+      )
+      ,htmltools::tags$div(style="width: 8px; position: relative;")
+    ))
+  } else {
+    htmlElements <- list(
+      htmltools::tags$div(style = sprintf('margin-right: %spx; margin-left: %spx', textWidth / 2, textWidth / 2 ), svgElement),
+      htmltools::tags$div(style=sprintf("width: 100%%; height: 1rem; position: relative; %s", labelStyle),
+                          htmltools::tags$div(style=sprintf("position:absolute; left:%spx; top: 0px;", 0),
+                                              labels[1]),
+                          htmltools::tags$div(style=sprintf("position:absolute; left:%spx; top: 0px;",
+                                                            width - diff(graphics::strwidth(labels, units = 'inches', cex = cexAdj)) * 72),
+                                              labels[2])
+
+      )
+      )
+  }
   if ( !is.null(title) ) {
     htmlElements <-
       append(htmlElements, list(htmltools::div(htmltools::tags$strong(title))), after = 0)
@@ -845,9 +905,23 @@ addLegendFactor <- function(map,
 #'
 #' the color of the legend symbols, if omitted pal is used
 #'
+#' @param fillColor
+#'
+#' fill color of symbol
+#'
+#' @param strokeWidth
+#'
+#' width of symbol outline
+#'
 #' @param ...
 #'
-#' arguments to pass to \link[leaflet]{addControl}
+#' arguments to pass to
+#'
+#' \link[leaflet]{addControl} for addLegendSize
+#'
+#' \link[base]{pretty} for sizeBreaks
+#'
+#' \link[leaflegend]{makeSymbol} for makeSizeIcons
 #'
 #' @return
 #'
@@ -883,6 +957,36 @@ addLegendFactor <- function(map,
 #'     orientation = c('vertical', 'horizontal'),
 #'     opacity = .7,
 #'     breaks = 5)
+#'
+#' # a wrapper for making icons is provided
+#' sizeSymbols <-
+#' makeSizeIcons(
+#'   quakes$depth,
+#'   shape = 'cross',
+#'   pal = numPal,
+#'   color = 'black',
+#'   strokeWidth = 1,
+#'   opacity = .8,
+#'   fillOpacity = .5,
+#'   baseSize = 20
+#' )
+#' leaflet() %>%
+#'   addTiles() %>%
+#'   addMarkers(data = quakes,
+#'              icon = sizeSymbols,
+#'              lat = ~lat, lng = ~long) %>%
+#'   addLegendSize(
+#'     values = quakes$depth,
+#'     pal = numPal,
+#'     title = 'Depth',
+#'     shape = 'cross',
+#'     orientation = 'horizontal',
+#'     strokeWidth = 1,
+#'     opacity = .8,
+#'     fillOpacity = .5,
+#'     color = 'black',
+#'     baseSize = 20,
+#'     breaks = 5)
 addLegendSize <- function(map,
                           pal,
                           values,
@@ -890,11 +994,13 @@ addLegendSize <- function(map,
                           labelStyle = '',
                           shape = c('rect', 'circle', 'triangle', 'plus', 'cross', 'diamond', 'star', 'stadium'),
                           orientation = c('vertical', 'horizontal'),
+                          color,
+                          fillColor,
+                          strokeWidth = 1,
                           opacity = 1,
                           fillOpacity = opacity,
                           breaks = 5,
                           baseSize = 10,
-                          color,
                           ...) {
   shape <- match.arg(shape)
   sizes <- sizeBreaks(values, breaks, baseSize)
@@ -904,14 +1010,21 @@ addLegendSize <- function(map,
     stopifnot(length(color) == 1 || length(color) == length(breaks))
     colors <- color
   }
+  if ( missing(fillColor) ) {
+    fillColors <- pal(as.numeric(names(sizes)))
+  } else {
+    stopifnot(length(fillColor) == 1 || length(fillColor) == length(breaks))
+    fillColors <- fillColor
+  }
   symbols <- Map(makeSymbol,
                  shape = shape,
                  width = sizes,
                  height = sizes,
                  color = colors,
-                 fillColor = colors,
+                 fillColor = fillColors,
                  opacity = opacity,
-                 fillOpacity = fillOpacity)
+                 fillOpacity = fillOpacity,
+                 `stroke-width` = strokeWidth)
   addLegendImage(map, images = symbols, labels = names(sizes),
                  title = title, labelStyle = labelStyle,
                  orientation = orientation, width = sizes, height = sizes, ...)
@@ -935,3 +1048,46 @@ sizeBreaks <- function(values, breaks, baseSize, ...) {
   sizes <- breaks / mean(values, na.rm = TRUE) * baseSize
   stats::setNames(sizes, breaks)[breaks > 0 & breaks <= max(values)]
 }
+
+#' @export
+#'
+#' @rdname addLegendSize
+makeSizeIcons <- function(values,
+                          shape = c('rect', 'circle', 'triangle', 'plus',
+                                    'cross', 'diamond', 'star', 'stadium'),
+                          pal,
+                          color,
+                          fillColor = color,
+                          opacity,
+                          fillOpacity = opacity,
+                          strokeWidth = 1,
+                          baseSize,
+                          ...
+                          ) {
+  shape <- match.arg(shape)
+  if ( missing(color) ) {
+    colors <- pal(values)
+  } else {
+    stopifnot(length(color) == 1 || length(color) == length(values))
+    colors <- color
+  }
+  if ( missing(fillColor) ) {
+    fillColors <- pal(values)
+  } else {
+    stopifnot(length(fillColor) == 1 || length(fillColor) == length(values))
+    fillColors <- fillColor
+  }
+  sizes <- sizeNumeric(values, baseSize)
+  makeSymbolIcons(
+    shape = shape,
+    width = sizes,
+    height = sizes,
+    color = colors,
+    fillColor = fillColors,
+    opacity = opacity,
+    fillOpacity = fillOpacity,
+    strokeWidth = strokeWidth,
+    ...
+  )
+}
+
