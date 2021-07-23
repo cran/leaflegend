@@ -1,3 +1,19 @@
+# leaflegend 0.4.0
+
+* fixes error on makeSizeLegend where fillColor is not evaluated if no argument is provided
+
+* adding colorValues as an argument to makeSizeLegend so that symbols can be sized and colored on different vectors of data
+
+* fixes warning on addLegendNumeric where the shape default was a vector not a single value
+
+* adding number formatting to addSizeLegend
+
+* adding group layer support for legends. Use addLayersControl to turn on/off
+legends
+
+* added example for using raster images with size encodings based on data
+
+
 # leaflegend 0.3.0
 
 * stroke outlines of shapes are now padded so that the stroke is not cut off

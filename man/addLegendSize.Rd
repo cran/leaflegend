@@ -23,6 +23,10 @@ addLegendSize(
   fillOpacity = opacity,
   breaks = 5,
   baseSize = 10,
+  numberFormat = function(x) {     prettyNum(x, big.mark = ",", scientific = FALSE,
+    digits = 1) },
+  group = NULL,
+  className = "info legend leaflet-control",
   ...
 )
 
@@ -36,7 +40,8 @@ makeSizeIcons(
     "stadium"),
   pal,
   color,
-  fillColor = color,
+  colorValues,
+  fillColor,
   opacity,
   fillOpacity = opacity,
   strokeWidth = 1,
@@ -49,7 +54,9 @@ makeSizeIcons(
 
 \item{pal}{the color palette function, generated from \link[leaflet]{colorNumeric}}
 
-\item{values}{the values used to generate colors from the palette function}
+\item{values}{the values used to generate sizes and if colorValues is not specified and
+pal is given, then the values are used to generate  colors from the palette
+function}
 
 \item{title}{the legend title, pass in HTML to style}
 
@@ -74,6 +81,12 @@ makeSizeIcons(
 \item{baseSize}{re-scaling size in pixels of the mean of the values, the average value will
 be this exact size}
 
+\item{numberFormat}{formatting functions for numbers that are displayed e.g. format, prettyNum}
+
+\item{group}{group name of a leaflet layer group}
+
+\item{className}{extra CSS class to append to the control, space separated}
+
 \item{...}{arguments to pass to
 
 \link[leaflet]{addControl} for addLegendSize
@@ -81,6 +94,8 @@ be this exact size}
 \link[base]{pretty} for sizeBreaks
 
 \link[leaflegend]{makeSymbol} for makeSizeIcons}
+
+\item{colorValues}{the values used to generate color from the palette function}
 }
 \value{
 an object from \link[leaflet]{addControl}
@@ -145,4 +160,19 @@ leaflet() \%>\%
     color = 'black',
     baseSize = 20,
     breaks = 5)
+
+# Group layers control
+leaflet() \%>\%
+  addTiles() \%>\%
+    addLegendSize(
+      values = quakes$depth,
+      pal = numPal,
+      title = 'Depth',
+      labelStyle = 'margin: auto;',
+      shape = c('triangle'),
+      orientation = c('vertical', 'horizontal'),
+      opacity = .7,
+      breaks = 5,
+      group = 'Depth') \%>\%
+    addLayersControl(overlayGroups = c('Depth'))
 }

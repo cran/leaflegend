@@ -13,6 +13,8 @@ addLegendImage(
   orientation = c("vertical", "horizontal"),
   width = 20,
   height = 20,
+  group = NULL,
+  className = "info legend leaflet-control",
   ...
 )
 }
@@ -32,6 +34,10 @@ addLegendImage(
 \item{width}{in pixels}
 
 \item{height}{in pixels}
+
+\item{group}{group name of a leaflet layer group}
+
+\item{className}{extra CSS class to append to the control, space separated}
 
 \item{...}{arguments to pass to \link[leaflet]{addControl}}
 }
@@ -65,11 +71,35 @@ leafIcons <- icons(
 )
 
 leaflet(data = quakes1) \%>\% addTiles() \%>\%
-  addMarkers(~long, ~lat, icon = leafIcons) \%>\%
+  addMarkers(~long, ~lat, icon = leafIcons, group = 'Quake Leaves') \%>\%
   addLegendImage(images = c("http://leafletjs.com/examples/custom-icons/leaf-green.png",
                             "http://leafletjs.com/examples/custom-icons/leaf-red.png"),
                  labels = c('Green', 'Red'),width = 38, height = 95,
                  title = htmltools::tags$div('Leaf',
                  style = 'font-size: 24px; text-align: center;'),
-                 position = 'topright')
+                 position = 'topright',
+                 group = 'Quake Leaves') \%>\%
+  addLayersControl(overlayGroups = c('Quake Leaves'), position = 'bottomright')
+
+ # use raster images with size encodings
+ height <- sizeNumeric(quakes$depth, baseSize = 40)
+ width <- height * 38 / 95
+ symbols <- icons(
+   iconUrl = 'http://leafletjs.com/examples/custom-icons/leaf-green.png',
+   iconWidth = width,
+   iconHeight = height)
+ probs <- c(.2, .4, .6, .8)
+ leaflet(quakes) \%>\%
+   addTiles() \%>\%
+   addMarkers(icon = symbols,
+              lat = ~lat, lng = ~long) \%>\%
+   addLegendImage(
+     images = rep("http://leafletjs.com/examples/custom-icons/leaf-green.png", 4),
+     labels = round(quantile(height, probs = probs), 0),
+     width = quantile(height, probs = probs) * 38 / 95,
+     height = quantile(height, probs = probs),
+     title = htmltools::tags$div(
+       'Leaf',
+       style = 'font-size: 24px; text-align: center; margin-bottom: 5px;'),
+     position = 'topright', orientation = 'vertical')
 }
