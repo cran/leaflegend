@@ -18,14 +18,17 @@ addLegendNumeric(
   width = 20,
   height = 100,
   bins = 7,
-  numberFormat = function(x) {     prettyNum(x, format = "f", big.mark = ",", digits =
-    3, scientific = FALSE) },
+  numberFormat = function(x) {
+     prettyNum(x, format = "f", big.mark = ",", digits =
+    3, scientific = FALSE)
+ },
   tickLength = 4,
   tickWidth = 1,
   decreasing = FALSE,
   fillOpacity = 1,
   group = NULL,
   className = "info legend leaflet-control",
+  data = leaflet::getMapData(map),
   ...
 )
 
@@ -40,12 +43,15 @@ addLegendQuantile(
   orientation = c("vertical", "horizontal"),
   width = 24,
   height = 24,
-  numberFormat = function(x) {     prettyNum(x, big.mark = ",", scientific = FALSE,
-    digits = 1) },
+  numberFormat = function(x) {
+     prettyNum(x, big.mark = ",", scientific = FALSE,
+    digits = 1)
+ },
   opacity = 1,
   fillOpacity = opacity,
   group = NULL,
   className = "info legend leaflet-control",
+  data = leaflet::getMapData(map),
   ...
 )
 
@@ -60,10 +66,15 @@ addLegendBin(
   orientation = c("vertical", "horizontal"),
   width = 24,
   height = 24,
+  numberFormat = function(x) {
+     format(round(x, 3), big.mark = ",", trim = TRUE,
+    scientific = FALSE)
+ },
   opacity = 1,
   fillOpacity = opacity,
   group = NULL,
   className = "info legend leaflet-control",
+  data = leaflet::getMapData(map),
   ...
 )
 
@@ -82,6 +93,7 @@ addLegendFactor(
   fillOpacity = opacity,
   group = NULL,
   className = "info legend leaflet-control",
+  data = leaflet::getMapData(map),
   ...
 )
 }
@@ -102,7 +114,8 @@ addLegendFactor(
 
 \item{height}{in pixels}
 
-\item{bins}{an approximate number of tick-marks on the color gradient for the colorNumeric palette}
+\item{bins}{an approximate number of tick-marks on the color gradient for the
+colorNumeric palette}
 
 \item{numberFormat}{formatting functions for numbers that are displayed e.g. format, prettyNum}
 
@@ -118,6 +131,14 @@ addLegendFactor(
 
 \item{className}{extra CSS class to append to the control, space separated}
 
+\item{data}{a data object. Currently supported objects are matrices, data
+frames, spatial objects from the \pkg{sp} package
+(\code{SpatialPoints}, \code{SpatialPointsDataFrame}, \code{Polygon},
+\code{Polygons}, \code{SpatialPolygons}, \code{SpatialPolygonsDataFrame},
+\code{Line}, \code{Lines}, \code{SpatialLines}, and
+\code{SpatialLinesDataFrame}), and
+spatial data frames from the \pkg{sf} package.}
+
 \item{...}{arguments to pass to \link[leaflet]{addControl}}
 
 \item{labelStyle}{character string of style argument for HTML text}
@@ -128,7 +149,8 @@ addLegendFactor(
 an object from \link[leaflet]{addControl}
 }
 \description{
-Functions for more control over the styling of 'leaflet' legends. The 'leaflet'
+Functions for more control over the styling of 'leaflet' legends.
+The 'leaflet'
 map is passed through and the output is a 'leaflet' control so that
 the legends are integrated with other functionality of the API. Style
 the text of the labels, the symbols used, orientation of the legend items,
@@ -216,7 +238,8 @@ leaflet() \%>\%
   ) \%>\%
   addLegendFactor(
     pal = factorPal,
-    title = htmltools::tags$div('addLegendFactor', style = 'font-size: 24px; color: red;'),
+    title = htmltools::tags$div('addLegendFactor', style = 'font-size: 24px;
+    color: red;'),
     values = quakes$group,
     position = 'topright',
     shape = 'triangle',
@@ -243,7 +266,6 @@ leaflet() \%>\%
   ) \%>\%
   addLegendBin(
     pal = binPal,
-    values = quakes$mag,
     position = 'topright',
     title = 'addLegendBin',
     labelStyle = 'font-size: 18px; font-weight: bold;',
@@ -274,7 +296,6 @@ leaflet() \%>\%
   ) \%>\%
   addLegendBin(
     pal = binPal,
-    values = quakes$mag,
     position = 'bottomleft',
     title = 'addLegendBin',
     group = 'Bin'
