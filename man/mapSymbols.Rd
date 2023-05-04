@@ -3,6 +3,7 @@
 \name{mapSymbols}
 \alias{mapSymbols}
 \alias{makeSymbol}
+\alias{makeSvgUri}
 \alias{makeSymbolIcons}
 \alias{addSymbols}
 \alias{addSymbolsSize}
@@ -22,9 +23,10 @@ makeSymbol(
   ...
 )
 
+makeSvgUri(svg, width, height, strokeWidth)
+
 makeSymbolIcons(
-  shape = c("rect", "circle", "triangle", "plus", "cross", "diamond", "star",
-    "stadium", "line", "polygon"),
+  shape,
   color,
   fillColor = color,
   opacity,
@@ -40,7 +42,7 @@ addSymbols(
   lng,
   lat,
   values,
-  shape = c("rect", "circle", "triangle", "plus", "cross", "diamond", "star"),
+  shape,
   color,
   fillColor = color,
   opacity = 1,
@@ -57,7 +59,7 @@ addSymbolsSize(
   lng,
   lat,
   values,
-  shape = c("rect", "circle", "triangle", "plus", "cross", "diamond", "star"),
+  shape,
   color,
   fillColor = color,
   opacity = 1,
@@ -74,8 +76,7 @@ sizeBreaks(values, breaks, baseSize, ...)
 
 makeSymbolsSize(
   values,
-  shape = c("rect", "circle", "triangle", "plus", "cross", "diamond", "star",
-    "stadium", "polygon"),
+  shape = "rect",
   color,
   fillColor,
   opacity = 1,
@@ -86,7 +87,7 @@ makeSymbolsSize(
 )
 }
 \arguments{
-\item{shape}{the desired shape of the symbol}
+\item{shape}{the desired shape of the symbol, See \link[leaflegend]{availableShapes}}
 
 \item{width}{in pixels}
 
@@ -101,6 +102,8 @@ makeSymbolsSize(
 \item{fillOpacity}{fill opacity}
 
 \item{...}{arguments to pass to \code{pretty}}
+
+\item{svg}{inner svg tags for symbol}
 
 \item{strokeWidth}{stroke width in pixels}
 
@@ -126,7 +129,8 @@ overridden}
 \item{baseSize}{re-scaling size in pixels of the mean of the values, the average value will
 be this exact size}
 
-\item{breaks}{an integer specifying the number of breaks or a numeric vector of the breaks}
+\item{breaks}{an integer specifying the number of breaks or a numeric vector of the breaks;
+if a named vector then the names are used as labels.}
 }
 \value{
 HTML svg element

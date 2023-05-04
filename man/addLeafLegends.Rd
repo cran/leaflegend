@@ -27,6 +27,8 @@ addLegendNumeric(
   decreasing = FALSE,
   fillOpacity = 1,
   group = NULL,
+  labels = NULL,
+  naLabel = "NA",
   className = "info legend leaflet-control",
   data = leaflet::getMapData(map),
   ...
@@ -38,8 +40,7 @@ addLegendQuantile(
   values,
   title = NULL,
   labelStyle = "",
-  shape = c("rect", "circle", "triangle", "plus", "cross", "diamond", "star",
-    "stadium", "line", "polygon"),
+  shape = "rect",
   orientation = c("vertical", "horizontal"),
   width = 24,
   height = 24,
@@ -51,6 +52,7 @@ addLegendQuantile(
   fillOpacity = opacity,
   group = NULL,
   className = "info legend leaflet-control",
+  naLabel = "NA",
   data = leaflet::getMapData(map),
   ...
 )
@@ -61,8 +63,7 @@ addLegendBin(
   values,
   title = NULL,
   labelStyle = "",
-  shape = c("rect", "circle", "triangle", "plus", "cross", "diamond", "star",
-    "stadium", "line", "polygon"),
+  shape = "rect",
   orientation = c("vertical", "horizontal"),
   width = 24,
   height = 24,
@@ -74,6 +75,7 @@ addLegendBin(
   fillOpacity = opacity,
   group = NULL,
   className = "info legend leaflet-control",
+  naLabel = "NA",
   data = leaflet::getMapData(map),
   ...
 )
@@ -84,8 +86,7 @@ addLegendFactor(
   values,
   title = NULL,
   labelStyle = "",
-  shape = c("rect", "circle", "triangle", "plus", "cross", "diamond", "star",
-    "stadium", "line", "polygon"),
+  shape = "rect",
   orientation = c("vertical", "horizontal"),
   width = 24,
   height = 24,
@@ -93,6 +94,7 @@ addLegendFactor(
   fillOpacity = opacity,
   group = NULL,
   className = "info legend leaflet-control",
+  naLabel = "NA",
   data = leaflet::getMapData(map),
   ...
 )
@@ -106,7 +108,7 @@ addLegendFactor(
 
 \item{title}{the legend title, pass in HTML to style}
 
-\item{shape}{shape of the color symbols}
+\item{shape}{the desired shape of the symbol, See \link[leaflegend]{availableShapes}}
 
 \item{orientation}{stack the legend items vertically or horizontally}
 
@@ -128,6 +130,10 @@ colorNumeric palette}
 \item{fillOpacity}{fill opacity of the legend items}
 
 \item{group}{group name of a leaflet layer group}
+
+\item{labels}{labels}
+
+\item{naLabel}{the legend label for NAs in values}
 
 \item{className}{extra CSS class to append to the control, space separated}
 
@@ -253,55 +259,8 @@ leaflet() \%>\%
 # Bin Legend
 # Restyle the text of the labels, change the legend item orientation
 
-binPal <- colorBin('Set1', quakes$mag)
-leaflet() \%>\%
-  addTiles() \%>\%
-  addCircleMarkers(
-    data = quakes,
-    lat = ~ lat,
-    lng = ~ long,
-    color = ~ binPal(mag),
-    opacity = 1,
-    fillOpacity = 1
-  ) \%>\%
-  addLegendBin(
-    pal = binPal,
-    position = 'topright',
-    title = 'addLegendBin',
-    labelStyle = 'font-size: 18px; font-weight: bold;',
-    orientation = 'horizontal'
-  ) \%>\%
-  addLegend(pal = binPal,
-            values = quakes$mag,
-            title = 'addLegend')
 
 # Group Layer Control
 # Works with baseGroups and overlayGroups
 
-leaflet() \%>\%
-  addTiles() \%>\%
-  addLegendNumeric(
-    pal = numPal,
-    values = quakes$depth,
-    position = 'topright',
-    title = 'addLegendNumeric',
-    group = 'Numeric Data'
-  ) \%>\%
-  addLegendQuantile(
-    pal = quantPal,
-    values = quakes$mag,
-    position = 'topright',
-    title = 'addLegendQuantile',
-    group = 'Quantile'
-  ) \%>\%
-  addLegendBin(
-    pal = binPal,
-    position = 'bottomleft',
-    title = 'addLegendBin',
-    group = 'Bin'
-  ) \%>\%
-  addLayersControl(
-    baseGroups = c('Numeric Data', 'Quantile'),  overlayGroups = c('Bin'),
-    position = 'bottomright'
-  )
 }
