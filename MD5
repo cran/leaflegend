@@ -1,8 +1,8 @@
-fbdd1ca9e5012c72b28b8093cef400fa *DESCRIPTION
+7a642ca2aec3e64213a1ebc7b37a8013 *DESCRIPTION
 7c5da89d9eb3028dc51176195a7a6023 *LICENSE
 1402226967ff191469090d0633d7b5cb *NAMESPACE
-8080e382be214b97637547152dbc5df4 *NEWS.md
-779f421e49bc86f81e9947629f1bd926 *R/legend.R
+0737beec0bb098e47571fd3b123a64b6 *NEWS.md
+068400cb67b53b7ea8c865b70b13d079 *R/legend.R
 864de3ce2935fbef48fd64565cfae6ae *README.md
 632dc3ece0b552005fa8d8fa108affa4 *inst/img/leaf-blue.png
 46398626670904eb888bb55e4c99e36d *inst/img/leaf-green.png
@@ -14,7 +14,7 @@ bc53e8eeba8df68e0868f5524a6cfbe3 *inst/img/leaf-yellow.png
 0fc462e79170cf2fca99f85a6e2bcb62 *man/addLeafLegends.Rd
 3b23a11b27592daa9024832ca6651e58 *man/addLegendAwesomeIcon.Rd
 d69e89534fcf2c3c0be34c87b1196d20 *man/addLegendImage.Rd
-eef84e6e6d96b8f0696f248af6750f2f *man/availableShapes.Rd
+05e177d4551178ec472529977f9adc0c *man/availableShapes.Rd
 6a3449c156792566258ea0f19d1ba801 *man/figures/circle-pch.svg
 657b865e30d3a1d7d6aa34ddf38a0880 *man/figures/circle.svg
 c7c8f9d69b179e6b01da389cbdf36e14 *man/figures/cross-circle-pch.svg
@@ -56,4 +56,4 @@ c371aa3be69978837fd4d92675e06fce *man/figures/triangle.svg
 af26f6b5ab9b98e3cb97a1aded3782af *man/legendSymbols.Rd
 98d85788e60287fe39b21dde5f8124ff *man/mapSymbols.Rd
 3c095e5b44b97eb466fbffe685e165ea *tests/testthat.R
-df4523fd2ce59ef0f8ecba9d8feef0c6 *tests/testthat/test-legend.R
+58c42f4815a22d1b50680471c716e4d2 *tests/testthat/test-legend.R
