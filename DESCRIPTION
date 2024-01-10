@@ -1,7 +1,7 @@
 Package: leaflegend
 Type: Package
 Title: Add Custom Legends to 'leaflet' Maps
-Version: 1.1.1
+Version: 1.2.0
 Authors@R: c(
     person("Thomas", "Roh", email = "thomas@roh.engineering", role = c("aut", "cre")),
     person("Ricardo Rodrigo", "Basa", email = "radbasa@gmail.com", role = c("ctb")))
@@ -19,9 +19,9 @@ BugReports: https://github.com/tomroh/leaflegend/issues
 Suggests: covr, testthat (>= 3.0.0)
 Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2023-08-19 15:24:52 UTC; thoma
+Packaged: 2024-01-04 18:34:45 UTC; thoma
 Author: Thomas Roh [aut, cre],
   Ricardo Rodrigo Basa [ctb]
 Maintainer: Thomas Roh <thomas@roh.engineering>
 Repository: CRAN
-Date/Publication: 2023-08-19 16:12:41 UTC
+Date/Publication: 2024-01-10 16:23:03 UTC
