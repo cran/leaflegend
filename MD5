@@ -1,9 +1,10 @@
-3d0b8f42e65b7d93a53e9dddace86689 *DESCRIPTION
+4d90b25365b2798e316cc223fb604aff *DESCRIPTION
 7c5da89d9eb3028dc51176195a7a6023 *LICENSE
 1402226967ff191469090d0633d7b5cb *NAMESPACE
-7824ec427520bfac88e09e572cf1d925 *NEWS.md
-6764e131022d4d947d5e7b625c5ab225 *R/legend.R
+ce7815016d447d0e395199fd8887cb3a *NEWS.md
+f132c46fefd4f8dd04e05ac348550d91 *R/legend.R
 864de3ce2935fbef48fd64565cfae6ae *README.md
+82751853932bc4b9d99c3e101da5b0a6 *inst/CITATION
 632dc3ece0b552005fa8d8fa108affa4 *inst/img/leaf-blue.png
 46398626670904eb888bb55e4c99e36d *inst/img/leaf-green.png
 e6127370aa92819d8c336c93160087a8 *inst/img/leaf-orange.png
@@ -11,7 +12,7 @@ d9e8aefe3a6a44ba18a42c345ee99b13 *inst/img/leaf-purple.png
 5f782c569d7b928b88fac09302e33e2e *inst/img/leaf-red.png
 bc53e8eeba8df68e0868f5524a6cfbe3 *inst/img/leaf-yellow.png
 7b4c88a04fcf8dd5ccf8f7477bc4adf0 *inst/img/rect.png
-c36284a91667c31f3339e597300d0c78 *man/addLeafLegends.Rd
+7dc1205024b80e8b7c77a61cf598092b *man/addLeafLegends.Rd
 3b23a11b27592daa9024832ca6651e58 *man/addLegendAwesomeIcon.Rd
 d69e89534fcf2c3c0be34c87b1196d20 *man/addLegendImage.Rd
 05e177d4551178ec472529977f9adc0c *man/availableShapes.Rd
@@ -56,4 +57,4 @@ c371aa3be69978837fd4d92675e06fce *man/figures/triangle.svg
 e14a3a81d153ca25eb55e4276f6455e4 *man/legendSymbols.Rd
 47eaee41dd8134db16a609110cfa6c93 *man/mapSymbols.Rd
 3c095e5b44b97eb466fbffe685e165ea *tests/testthat.R
-98964be4dab0129f641fd0731c1ab25c *tests/testthat/test-legend.R
+97d3298b2fce6de3b65846b3b62cbe66 *tests/testthat/test-legend.R
