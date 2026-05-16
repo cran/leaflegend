@@ -1,4 +1,4 @@
-# leaflegend <a href='https://leaflegend.roh.engineering'><img src='man/figures/logo.png' align="right" height="106" /></a>
+# leaflegend <a href='https://leaflegend.delveds.com'><img src='man/figures/logo.png' align="right" height="106" /></a>
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/leaflegend)](https://CRAN.R-project.org/package=leaflegend)
@@ -82,6 +82,10 @@ devtools::install_github("tomroh/leaflegend")
 <img src="man/figures/diamond-pch.svg" alt="line" width = 50 height = 70 style="margin: 5px;"></img>
 <img src="man/figures/triangle-pch.svg" alt="line" width = 50 height = 70 style="margin: 5px;"></img>
 <img src="man/figures/down-triangle-pch.svg" alt="line" width = 50 height = 70 style="margin: 5px;"></img>
+
+**special**
+
+<img src="man/figures/text.svg" alt="line" width = 50 height = 70 style="margin: 5px;"></img>
 
 ## Example
 
